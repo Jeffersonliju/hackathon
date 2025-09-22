@@ -1,14 +1,19 @@
 import os
 from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configure the Gemini API
-# Make sure to set your API key as an environment variable
-# export GOOGLE_API_KEY="your_api_key"
+# The API key is loaded from the .env file
 try:
-    genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
-except KeyError:
-    print("Please set the GOOGLE_API_KEY environment variable.")
+    api_key = os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise KeyError("GOOGLE_API_KEY not found in environment variables or .env file.")
+    genai.configure(api_key=api_key)
+except KeyError as e:
+    print(f"Error: {e}")
     exit()
 
 
